@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background elements */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+      animation: float 20s infinite linear;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .card { 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 60px 40px;
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 
+        0 32px 64px rgba(0, 0, 0, 0.15),
+        0 16px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transform: translateY(0);
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4361ee, #7209b7, #f72585);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      box-shadow: 
+        0 20px 40px rgba(16, 185, 129, 0.3),
+        0 8px 16px rgba(16, 185, 129, 0.2);
+      animation: pulse 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .success-icon::after {
+      content: '✓';
+      color: white;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    h2 {
+      color: #1f2937;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+
+    .booking-details {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 32px 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .booking-details::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #4361ee, #7209b7);
+    }
+
+    .booking-label {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .booking-id {
+      color: #1e293b;
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      background: linear-gradient(135deg, #4361ee, #7209b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+    }
+
+    a { 
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 32px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #4361ee, #7209b7);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 12px 24px rgba(67, 97, 238, 0.3),
+        0 4px 8px rgba(67, 97, 238, 0.2);
+      position: relative;
+      overflow: hidden;
+      min-width: 200px;
+    }
+
+    a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    a:hover::before {
+      left: 100%;
+    }
+
+    a:hover { 
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 
+        0 20px 40px rgba(67, 97, 238, 0.4),
+        0 8px 16px rgba(67, 97, 238, 0.3);
+    }
+
+    a:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #f72585;
+      animation: confetti-fall 3s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .card {
+        padding: 40px 24px;
+        margin: 20px;
+      }
+      
+      h2 {
+        font-size: 28px;
+      }
+      
+      .booking-id {
+        font-size: 20px;
+      }
+      
+      a {
+        padding: 14px 28px;
+        font-size: 15px;
+      }
+    }
+
+    /* Additional floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+      animation: particle-float 6s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) {
+      width: 8px;
+      height: 8px;
+      top: 20%;
+      left: 20%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      width: 12px;
+      height: 12px;
+      top: 60%;
+      right: 20%;
+      animation-delay: 1s;
+    }
+
+    .particle:nth-child(3) {
+      width: 6px;
+      height: 6px;
+      bottom: 20%;
+      left: 30%;
+      animation-delay: 2s;
+    }
+
+    @keyframes particle-float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  
+  <div class="card">
+    <div class="success-icon"></div>
+    <h2>Booking Confirmed!</h2>
+    <p class="subtitle">Your reservation has been successfully processed and confirmed.</p>
+    
+    <div class="booking-details">
+      <div class="booking-label">Booking ID</div>
+      <div class="booking-id" id="bookingId"></div>
+    </div>
+    
+    <a href="dashboard.html">
+      Go to Dashboard
+    </a>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById("bookingId").innerText = params.get("bookingId");
+</script>
+</body>
+</html>

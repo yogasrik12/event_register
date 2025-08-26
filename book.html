@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Event</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background elements */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      animation: backgroundFloat 25s infinite linear;
+      z-index: 0;
+    }
+
+    @keyframes backgroundFloat {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card { 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 
+        0 32px 64px rgba(0, 0, 0, 0.15),
+        0 16px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4361ee, #7209b7, #f72585);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .event-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .event-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #4361ee, #7209b7);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 24px rgba(67, 97, 238, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .event-icon::after {
+      content: '🎫';
+      font-size: 28px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    #title {
+      color: #1f2937;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    #desc {
+      color: #6b7280;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    .event-details {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .detail-item {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .detail-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #4361ee, #7209b7);
+    }
+
+    .detail-label {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-value {
+      color: #1e293b;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .venue-icon::after { content: '📍'; }
+    .date-icon::after { content: '📅'; }
+    .price-icon::after { content: '💰'; }
+
+    .booking-section {
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      position: relative;
+    }
+
+    .booking-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .booking-title {
+      color: #1f2937;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .booking-title::before {
+      content: '🎟️';
+      font-size: 24px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    label {
+      color: #374151;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input { 
+      padding: 16px 20px;
+      width: 100%;
+      border: 2px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #4361ee;
+      background: white;
+      box-shadow: 
+        0 0 0 4px rgba(67, 97, 238, 0.1),
+        0 8px 16px rgba(67, 97, 238, 0.1);
+      transform: translateY(-1px);
+    }
+
+    input:hover {
+      border-color: rgba(67, 97, 238, 0.4);
+    }
+
+    .seats-display {
+      background: rgba(67, 97, 238, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .seats-info {
+      color: #4361ee;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    button { 
+      background: linear-gradient(135deg, #4361ee, #7209b7);
+      color: white;
+      padding: 18px 32px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      width: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 12px 24px rgba(67, 97, 238, 0.3),
+        0 4px 8px rgba(67, 97, 238, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover { 
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 20px 40px rgba(67, 97, 238, 0.4),
+        0 8px 16px rgba(67, 97, 238, 0.3);
+    }
+
+    button:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(67, 97, 238, 0.2);
+      border-left: 4px solid #4361ee;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #6b7280;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .card {
+        padding: 24px;
+        margin: 10px;
+      }
+      
+      #title {
+        font-size: 28px;
+      }
+      
+      .event-details {
+        gap: 16px;
+      }
+      
+      .detail-item {
+        padding: 20px;
+      }
+      
+      .booking-section {
+        padding: 24px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .event-details {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Add floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+      animation: particle-float 8s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) {
+      width: 6px;
+      height: 6px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      width: 10px;
+      height: 10px;
+      top: 50%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+
+    .particle:nth-child(3) {
+      width: 8px;
+      height: 8px;
+      bottom: 20%;
+      left: 80%;
+      animation-delay: 4s;
+    }
+
+    @keyframes particle-float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(-30px) rotate(180deg);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="loading-state" id="loadingState">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading event details...</div>
+      </div>
+
+      <div id="eventContent" style="display: none;">
+        <div class="event-header">
+          <div class="event-icon"></div>
+          <h2 id="title">Loading...</h2>
+          <p id="desc"></p>
+        </div>
+
+        <div class="event-details">
+          <div class="detail-item">
+            <div class="detail-label venue-icon">Venue</div>
+            <div class="detail-value" id="venue"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label date-icon">Date</div>
+            <div class="detail-value" id="date"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label price-icon">Price per seat</div>
+            <div class="detail-value">₹<span id="price"></span></div>
+          </div>
+        </div>
+
+        <div class="booking-section">
+          <div class="booking-title">Select Seats</div>
+          <div class="input-group">
+            <label for="seats">Number of Seats</label>
+            <input type="number" id="seats" value="1" min="1" max="10">
+            <div class="seats-display">
+              <div class="seats-info" id="seatsInfo">1 seat selected • Total: ₹<span id="totalPrice">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="goToPayment()" id="bookingBtn">
+          Proceed to Payment
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const API_URL = "http://localhost:5000";
+  const token = localStorage.getItem("token");
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
+  let eventData = null;
+
+  async function loadEvent() {
+    try {
+      const res = await fetch(`${API_URL}/events/${eventId}`, {
+        headers: { Authorization: "Bearer " + token }
+      });
+      eventData = await res.json();
+      
+      // Hide loading and show content
+      document.getElementById("loadingState").style.display = "none";
+      document.getElementById("eventContent").style.display = "block";
+      
+      document.getElementById("title").innerText = eventData.title;
+      document.getElementById("desc").innerText = eventData.description;
+      document.getElementById("venue").innerText = eventData.venue;
+      document.getElementById("date").innerText = new Date(eventData.date).toLocaleDateString();
+      document.getElementById("price").innerText = eventData.price;
+      
+      updateTotalPrice();
+    } catch (error) {
+      document.getElementById("loadingState").innerHTML = `
+        <div style="color: #ef4444; font-weight: 600;">Error loading event</div>
+        <div style="color: #6b7280; font-size: 14px; margin-top: 8px;">Please try again later</div>
+      `;
+    }
+  }
+
+  function updateTotalPrice() {
+    if (eventData) {
+      const seats = document.getElementById("seats").value;
+      const total = eventData.price * seats;
+      const seatsText = seats == 1 ? "seat" : "seats";
+      document.getElementById("totalPrice").innerText = total;
+      document.getElementById("seatsInfo").innerHTML = `${seats} ${seatsText} selected • Total: ₹${total}`;
+    }
+  }
+
+  function goToPayment() {
+    const seats = document.getElementById("seats").value;
+    const btn = document.getElementById("bookingBtn");
+    
+    btn.disabled = true;
+    btn.innerHTML = "Processing...";
+    
+    setTimeout(() => {
+      window.location.href = `payment.html?eventId=${eventId}&seats=${seats}`;
+    }, 500);
+  }
+
+  // Update total price when seats change
+  document.addEventListener('DOMContentLoaded', () => {
+    const seatsInput = document.getElementById('seats');
+    seatsInput.addEventListener('input', updateTotalPrice);
+  });
+
+  loadEvent();
+</script>
+</body>
+</html>

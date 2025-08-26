@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Event - EventHub</title>
+  <style>
+    :root {
+      --primary: #2575fc;
+      --secondary: #6a11cb;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --dark: #2c3e50;
+      --gray: #7f8c8d;
+      --light-gray: #eef0f3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 30px;
+    }
+
+    .main-content {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--light-gray);
+    }
+
+    .back-btn {
+      background: var(--light-gray);
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      margin-right: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: var(--gray);
+      color: white;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .event-info {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    .event-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .event-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-icon {
+      font-size: 16px;
+    }
+
+    .booking-form {
+      display: grid;
+      gap: 25px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .form-group input, 
+    .form-group select {
+      padding: 15px;
+      border: 2px solid var(--light-gray);
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+    }
+
+    .seats-selector {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .quantity-btn {
+      background: var(--light-gray);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .quantity-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .quantity-display {
+      font-size: 20px;
+      font-weight: 700;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .offer-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px dashed var(--light-gray);
+    }
+
+    .offer-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .offer-input input {
+      flex: 1;
+    }
+
+    .apply-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .apply-btn:hover {
+      background: #27ae60;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+    }
+
+    .order-summary {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .summary-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 5px 0;
+    }
+
+    .summary-total {
+      border-top: 2px solid var(--light-gray);
+      padding-top: 15px;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .discount-applied {
+      color: var(--success);
+    }
+
+    .payment-methods {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 2px solid var(--light-gray);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .payment-option:hover {
+      border-color: var(--primary);
+      background: rgba(37, 117, 252, 0.05);
+    }
+
+    .payment-option.selected {
+      border-color: var(--primary);
+      background: rgba(37, 117, 252, 0.1);
+    }
+
+    .payment-option input[type="radio"] {
+      margin-right: 12px;
+    }
+
+    .payment-icon {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .error-message {
+      background: #ffe6e6;
+      color: var(--danger);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--danger);
+    }
+
+    .success-message {
+      background: #e8f5e8;
+      color: var(--success);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--success);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .main-content, .sidebar {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-content">
+      <div class="header">
+        <button class="back-btn" onclick="window.history.back()">←</button>
+        <h1 class="page-title">Book Event</h1>
+      </div>
+
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+      <div id="successMessage" class="success-message" style="display: none;"></div>
+
+      <div class="event-info" id="eventInfo">
+        <div class="event-title" id="eventTitle">Loading...</div>
+        <div class="event-details" id="eventDetails">
+          <div class="detail-item">
+            <span class="detail-icon">📅</span>
+            <span id="eventDate">Loading...</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">🕒</span>
+            <span id="eventTime">Loading...</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">📍</span>
+            <span id="eventVenue">Loading...</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">💰</span>
+            <span id="eventPrice">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="booking-form" id="bookingForm">
+        <div class="form-group">
+          <label for="attendeeName">Attendee Name</label>
+          <input type="text" id="attendeeName" required placeholder="Enter full name">
+        </div>
+
+        <div class="form-group">
+          <label for="attendeeEmail">Email Address</label>
+          <input type="email" id="attendeeEmail" required placeholder="Enter email address">
+        </div>
+
+        <div class="form-group">
+          <label>Number of Seats</label>
+          <div class="seats-selector">
+            <button type="button" class="quantity-btn" onclick="changeSeats(-1)">−</button>
+            <span class="quantity-display" id="seatCount">1</span>
+            <button type="button" class="quantity-btn" onclick="changeSeats(1)">+</button>
+          </div>
+        </div>
+
+        <div class="offer-section">
+          <h3>Have a promo code?</h3>
+          <div class="offer-input">
+            <input type="text" id="offerCode" placeholder="Enter offer code">
+            <button type="button" class="apply-btn" onclick="applyOffer()">Apply</button>
+          </div>
+          <div id="offerStatus" style="margin-top: 10px; font-size: 14px;"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to Payment</button>
+      </form>
+    </div>
+
+    <div class="sidebar">
+      <div class="order-summary">
+        <h3 class="summary-title">Order Summary</h3>
+        <div class="summary-item">
+          <span>Event</span>
+          <span id="summaryEvent">-</span>
+        </div>
+        <div class="summary-item">
+          <span>Price per ticket</span>
+          <span id="summaryPrice">₹0</span>
+        </div>
+        <div class="summary-item">
+          <span>Seats</span>
+          <span id="summarySeats">1</span>
+        </div>
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span id="summarySubtotal">₹0</span>
+        </div>
+        <div class="summary-item discount-applied" id="discountRow" style="display: none;">
+          <span>Discount</span>
+          <span id="discountAmount">-₹0</span>
+        </div>
+        <div class="summary-item summary-total">
+          <span>Total</span>
+          <span id="summaryTotal">₹0</span>
+        </div>
+      </div>
+
+      <div class="payment-methods">
+        <h3 style="margin-bottom: 15px;">Payment Method</h3>
+        <div class="payment-option" onclick="selectPayment('card')">
+          <input type="radio" name="payment" value="card" id="paymentCard">
+          <span class="payment-icon">💳</span>
+          <span>Credit/Debit Card</span>
+        </div>
+        <div class="payment-option" onclick="selectPayment('upi')">
+          <input type="radio" name="payment" value="upi" id="paymentUPI">
+          <span class="payment-icon">📱</span>
+          <span>UPI</span>
+        </div>
+        <div class="payment-option" onclick="selectPayment('wallet')">
+          <input type="radio" name="payment" value="wallet" id="paymentWallet">
+          <span class="payment-icon">👝</span>
+          <span>Digital Wallet</span>
+        </div>
+        <div class="payment-option" onclick="selectPayment('netbanking')">
+          <input type="radio" name="payment" value="netbanking" id="paymentNet">
+          <span class="payment-icon">🏦</span>
+          <span>Net Banking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:5000";
+    let currentEvent = null;
+    let seatCount = 1;
+    let appliedDiscount = 0;
+    let selectedPayment = '';
+
+    function getEventId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('eventId');
+    }
+
+    function selectPayment(method) {
+      document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelector(`#payment${method.charAt(0).toUpperCase() + method.slice(1)}`).parentElement.classList.add('selected');
+      document.querySelector(`#payment${method.charAt(0).toUpperCase() + method.slice(1)}`).checked = true;
+      selectedPayment = method;
+    }
+
+    function changeSeats(delta) {
+      const newCount = seatCount + delta;
+      if (newCount >= 1 && newCount <= (currentEvent?.capacity || 10)) {
+        seatCount = newCount;
+        document.getElementById('seatCount').textContent = seatCount;
+        updateSummary();
+      }
+    }
+
+    function updateSummary() {
+      if (!currentEvent) return;
+      
+      const subtotal = currentEvent.price * seatCount;
+      const total = subtotal - appliedDiscount;
+      
+      document.getElementById('summarySeats').textContent = seatCount;
+      document.getElementById('summarySubtotal').textContent = `₹${subtotal}`;
+      document.getElementById('summaryTotal').textContent = `₹${total}`;
+      
+      if (appliedDiscount > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('discountAmount').textContent = `-₹${appliedDiscount}`;
+      } else {
+        document.getElementById('discountRow').style.display = 'none';
+      }
+    }
+
+    async function applyOffer() {
+      const offerCode = document.getElementById('offerCode').value.trim();
+      const statusDiv = document.getElementById('offerStatus');
+      
+      if (!offerCode) {
+        statusDiv.innerHTML = '<span style="color: var(--danger);">Please enter an offer code</span>';
+        return;
+      }
+
+      try {
+        const res = await fetch(API + "/offers");
+        const data = await res.json();
+        
+        const offer = data.offers.find(o => o.code === offerCode);
+        
+        if (!offer) {
+          statusDiv.innerHTML = '<span style="color: var(--danger);">Invalid offer code</span>';
+          appliedDiscount = 0;
+          updateSummary();
+          return;
+        }
+
+        const subtotal = currentEvent.price * seatCount;
+        
+        if (subtotal < offer.minPurchase) {
+          statusDiv.innerHTML = `<span style="color: var(--danger);">Minimum purchase of ₹${offer.minPurchase} required</span>`;
+          appliedDiscount = 0;
+          updateSummary();
+          return;
+        }
+
+        if (offer.discountType === 'percentage') {
+          appliedDiscount = Math.min(
+            (subtotal * offer.discountValue) / 100,
+            offer.maxDiscount || subtotal
+          );
+        } else {
+          appliedDiscount = Math.min(offer.discountValue, subtotal);
+        }
+        
+        statusDiv.innerHTML = `<span style="color: var(--success);">Offer applied! You save ₹${appliedDiscount}</span>`;
+        updateSummary();
+      } catch (error) {
+        statusDiv.innerHTML = '<span style="color: var(--danger);">Error applying offer</span>';
+      }
+    }
+
+    async function loadEvent() {
+      const eventId = getEventId();
+      if (!eventId) {
+        showError("No event ID provided");
+        return;
+      }
+
+      try {
+        const res = await fetch(API + `/events/${eventId}`);
+        const data = await res.json();
+        
+        if (!res.ok) {
+          showError(data.error || "Event not found");
+          return;
+        }
+
+        currentEvent = data.event;
+        
+        document.getElementById('eventTitle').textContent = currentEvent.title;
+        document.getElementById('eventDate').textContent = new Date(currentEvent.date).toLocaleDateString();
+        document.getElementById('eventTime').textContent = `${currentEvent.startTime} - ${currentEvent.endTime}`;
+        document.getElementById('eventVenue').textContent = currentEvent.venue;
+        document.getElementById('eventPrice').textContent = `₹${currentEvent.price} per ticket`;
+        
+        document.getElementById('summaryEvent').textContent = currentEvent.title;
+        document.getElementById('summaryPrice').textContent = `₹${currentEvent.price}`;
+        
+        updateSummary();
+      } catch (error) {
+        showError("Error loading event details");
+      }
+    }
+
+    async function loadUserData() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const res = await fetch(API + "/profile", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          const user = data.user;
+          
+          document.getElementById('attendeeName').value = 
+            user.profile?.firstName 
+              ? `${user.profile.firstName} ${user.profile.lastName || ''}` 
+              : user.username;
+          document.getElementById('attendeeEmail').value = user.email;
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!selectedPayment) {
+        showError('Please select a payment method');
+        return;
+      }
+
+      const formData = {
+        name: document.getElementById('attendeeName').value,
+        email: document.getElementById('attendeeEmail').value,
+        seats: seatCount,
+        paymentMethod: selectedPayment,
+        offerCode: document.getElementById('offerCode').value
+      };
+
+      try {
+        const token = localStorage.getItem("token");
+        const eventId = getEventId();
+        
+        const res = await fetch(API + `/events/${eventId}/book`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await res.json();
+        
+        if (res.ok) {
+          showSuccess('Booking successful! Redirecting to payment...');
+          setTimeout(() => {
+            window.location.href = `payment.html?bookingId=${data.booking._id}`;
+          }, 1500);
+        } else {
+          showError(data.error || 'Booking failed');
+        }
+      } catch (error) {
+        showError('Error processing booking');
+      }
+    });
+
+    // Initialize page
+    loadEvent();
+    loadUserData();

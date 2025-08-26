@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #8b5cf6;
+        --accent: #ec4899;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --info: #06b6d4;
+        --light: #f8fafc;
+        --dark: #0f172a;
+        --gray: #64748b;
+        --gray-light: #f1f5f9;
+        --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        min-height: 100vh;
+        color: var(--dark);
+        line-height: 1.6;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+        z-index: -1;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        33% { transform: translateY(-10px) rotate(1deg); }
+        66% { transform: translateY(5px) rotate(-1deg); }
+    }
+
+    header {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+        margin: 1rem;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    header h2 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        letter-spacing: -0.025em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 1;
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        padding: 1.5rem;
+        margin: 0 1rem;
+        border-radius: 20px;
+        gap: 1rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    nav button {
+        padding: 0.875rem 1.5rem;
+        border: none;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        cursor: pointer;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.025em;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+    }
+
+    nav button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s ease;
+    }
+
+    nav button:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.5);
+    }
+
+    nav button:hover::before {
+        left: 100%;
+    }
+
+    nav button:active {
+        transform: translateY(0) scale(0.95);
+    }
+
+    .logout-btn {
+        background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%) !important;
+        box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.39) !important;
+    }
+
+    .logout-btn:hover {
+        box-shadow: 0 8px 25px 0 rgba(239, 68, 68, 0.5) !important;
+    }
+
+    section {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    #content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-top: 2rem;
+        box-shadow: 
+            0 25px 50px -12px rgba(0, 0, 0, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        position: relative;
+    }
+
+    #content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+
+    #content h3 {
+        color: var(--primary-dark);
+        font-weight: 700;
+        font-size: 1.875rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--gray-light);
+        position: relative;
+    }
+
+    #content h3::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 1px;
+    }
+
+    .event-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        margin: 1.5rem 0;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-left: 4px solid var(--primary);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .event-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-left-color: var(--accent);
+    }
+
+    .event-card:hover::before {
+        opacity: 1;
+    }
+
+    .event-card h4 {
+        color: var(--primary);
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .event-card p {
+        margin: 0.75rem 0;
+        color: var(--gray);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .event-card p b {
+        color: var(--dark);
+        font-weight: 600;
+    }
+
+    .event-card button {
+        margin-top: 1.5rem;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.025em;
+        box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .event-card button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .event-card button:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 25px 0 rgba(16, 185, 129, 0.5);
+    }
+
+    .event-card button:hover::before {
+        left: 100%;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        max-width: 400px;
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0 1.5rem 0;
+        border: 2px solid rgba(226, 232, 240, 1);
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 
+            0 0 0 4px rgba(99, 102, 241, 0.1),
+            0 4px 12px rgba(99, 102, 241, 0.15);
+        transform: translateY(-1px);
+    }
+
+    label {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.95rem;
+        letter-spacing: 0.025em;
+    }
+
+    /* Enhanced button styles for profile actions */
+    #content button:not(.event-card button) {
+        padding: 0.75rem 1.5rem;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    #content button[onclick*="updateProfile"] {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+    }
+
+    #content button[onclick*="updateProfile"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.5);
+    }
+
+    #content button[onclick*="showEditProfile"],
+    #content button[onclick*="viewBooking"] {
+        background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%);
+        color: white;
+        box-shadow: 0 4px 14px 0 rgba(6, 182, 212, 0.39);
+    }
+
+    #content button[onclick*="showEditProfile"]:hover,
+    #content button[onclick*="viewBooking"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px 0 rgba(6, 182, 212, 0.5);
+    }
+
+    #content button[onclick*="showSection"] {
+        background: linear-gradient(135deg, var(--gray) 0%, #475569 100%);
+        color: white;
+        box-shadow: 0 4px 14px 0 rgba(100, 116, 139, 0.39);
+    }
+
+    #content button[onclick*="showSection"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px 0 rgba(100, 116, 139, 0.5);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body {
+            padding: 0.5rem;
+        }
+
+        header {
+            margin: 0.5rem;
+            padding: 1.5rem 1rem;
+        }
+
+        header h2 {
+            font-size: 2rem;
+        }
+
+        nav {
+            margin: 0.5rem;
+            padding: 1rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        nav button {
+            width: 100%;
+            max-width: 280px;
+        }
+
+        section {
+            padding: 1rem;
+        }
+
+        #content {
+            margin-top: 1rem;
+            padding: 1.5rem;
+        }
+
+        .event-card {
+            padding: 1.5rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            max-width: 100%;
+        }
+    }
+
+    /* Loading animation for better UX */
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Welcome message enhancement */
+    #welcome {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradient-shift 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradient-shift {
+        0% { filter: hue-rotate(0deg); }
+        100% { filter: hue-rotate(10deg); }
+    }
+</style>
+
+</head>
+<body>
+  <header>
+    <h2>🎉 Event Dashboard</h2>
+  </header>
+
+  <nav>
+    <button onclick="showSection('upcoming')">Upcoming Events</button>
+    <button onclick="showSection('live')">Live Events</button>
+    <button onclick="showSection('offers')">Offers</button>
+    <button onclick="showSection('profile')">Profile</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+
+ <section id="content">
+  <h3 id="welcome">Welcome to your dashboard!</h3>
+  <p>Select a section from above.</p>
+</section>
+
+
+  <script>
+    // Fetch profile on page load to show welcome msg
+window.onload = async () => {
+  const profile = await fetchData("/profile");
+  if (profile.user) {
+    document.getElementById("welcome").innerText = `🎉 Welcome, ${profile.user.username}!`;
+  }
+};
+
+    const API_URL = "http://localhost:5000";
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "login.html"; // redirect if not logged in
+    }
+
+    async function fetchData(endpoint) {
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      return res.json();
+    }
+
+    function showSection(type) {
+      if (type === "upcoming") {
+        fetchData("/events/upcoming").then(data => renderEvents("Upcoming Events", data));
+      } else if (type === "live") {
+        fetchData("/events/live").then(data => renderEvents("Live Events", data));
+      } else if (type === "offers") {
+        fetchData("/events").then(data => renderEvents("Special Offers", data));
+      } else if (type === "profile") {
+        fetchData("/profile").then(data => renderProfile(data));
+      }
+    }
+
+    function renderEvents(title, events) {
+      let html = `<h3>${title}</h3>`;
+      if (events.length === 0) {
+        html += "<p>No events available.</p>";
+      }
+      events.forEach(ev => {
+        html += `
+          <div class="event-card">
+            <h4>${ev.title}</h4>
+            <p>${ev.description}</p>
+            <p><b>Venue:</b> ${ev.venue}</p>
+            <p><b>Date:</b> ${new Date(ev.date).toLocaleDateString()}</p>
+            <p><b>Time:</b> ${ev.startTime} - ${ev.endTime}</p>
+            <p><b>Price:</b> ₹${ev.price}</p>
+            <button onclick="bookEvent('${ev._id}')">Book Now</button>
+          </div>`;
+      });
+      document.getElementById("content").innerHTML = html;
+    }
+
+function renderProfile(data) {
+  let html = `<h3>Profile</h3>
+    <p><b>Username:</b> ${data.user.username}</p>
+    <p><b>Email:</b> ${data.user.email}</p>
+    <button onclick="showEditProfile('${data.user.username}','${data.user.email}')">✏️ Edit Profile</button>
+    
+    <h4>🎟️ Booking History</h4>`;
+  
+  if (data.bookings.length === 0) {
+    html += "<p>No bookings yet.</p>";
+  } else {
+    data.bookings.forEach(b => {
+      html += `
+        <div class="event-card">
+          <h4>${b.eventId.title}</h4>
+          <p><b>Venue:</b> ${b.eventId.venue}</p>
+          <p><b>Date:</b> ${new Date(b.eventId.date).toLocaleDateString()}</p>
+          <p><b>Seats:</b> ${b.seats}</p>
+          <p><b>Paid:</b> ${b.paid ? "✅ Yes" : "❌ No"}</p>
+          <button onclick="viewBooking('${b._id}')">View Details</button>
+        </div>`;
+    });
+  }
+  document.getElementById("content").innerHTML = html;
+}
+
+
+function showEditProfile(username, email) {
+  const html = `
+    <h3>Edit Profile</h3>
+    <label>Username:</label><br>
+    <input type="text" id="edit-username" value="${username}" /><br><br>
+    <label>Email:</label><br>
+    <input type="email" id="edit-email" value="${email}" /><br><br>
+    <label>New Password (optional):</label><br>
+    <input type="password" id="edit-password" /><br><br>
+    <button onclick="updateProfile()">Save Changes</button>
+    <button onclick="showSection('profile')">Cancel</button>
+  `;
+  document.getElementById("content").innerHTML = html;
+}
+
+async function updateProfile() {
+  const username = document.getElementById("edit-username").value;
+  const email = document.getElementById("edit-email").value;
+  const password = document.getElementById("edit-password").value;
+
+  const res = await fetch(`${API_URL}/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ username, email, password })
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert("Profile updated successfully!");
+    showSection('profile');
+  } else {
+    alert("Error: " + data.error);
+  }
+}
+
+
+    function bookEvent(eventId) {
+      window.location.href = `book.html?eventId=${eventId}`;
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

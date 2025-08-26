@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up</title>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #2c3e50;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    color: #7f8c8d;
+    font-size: 16px;
+    margin: 0;
+  }
+
+  form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+  }
+
+  form:hover {
+    transform: translateY(-5px);
+  }
+
+  .input-group {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 2px solid #eef0f3;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s;
+    box-sizing: border-box;
+  }
+
+  input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+    font-size: 20px;
+  }
+
+  button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    border: none;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 15px;
+    color: #7f8c8d;
+  }
+
+  .login-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* Validation styling */
+  input.valid {
+    border-color: #2ecc71;
+  }
+
+  input.invalid {
+    border-color: #e74c3c;
+  }
+
+  .validation-message {
+    font-size: 14px;
+    color: #e74c3c;
+    margin-top: 5px;
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 15px;
+    }
+    
+    form {
+      padding: 25px 20px;
+    }
+    
+    h2 {
+      font-size: 24px;
+    }
+    
+    input, button {
+      padding: 14px 14px 14px 42px;
+    }
+    
+    .input-icon {
+      font-size: 18px;
+      left: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-header">
+      <h2>Create Account</h2>
+      <p class="subtitle">Join our community and get started</p>
+    </div>
+    
+    <form id="signupForm">
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" id="username" placeholder="Username" required>
+        <div class="validation-message" id="username-validation">Username must be at least 4 characters</div>
+      </div>
+      
+      <div class="input-group">
+        <span class="input-icon">✉️</span>
+        <input type="email" id="email" placeholder="Email" required>
+        <div class="validation-message" id="email-validation">Please enter a valid email address</div>
+      </div>
+      
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="password" placeholder="Password" required>
+        <div class="validation-message" id="password-validation">Password must be at least 8 characters</div>
+      </div>
+      
+      <button type="submit">Sign Up</button>
+      
+      <div class="login-link">
+        Already have an account? <a href="login.html">Log In</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+    });
+  </script>
+</body>
+</html>
